@@ -33,7 +33,7 @@ from tkinter.filedialog import askopenfilename, askdirectory
 from datetime import datetime
 
 #================================================================
-def do_dgs(resolution, maxscale, x, verbose, files, f):
+def do_dgs(resolution, maxscale, x, verbose, files, f, outdir='demo_results'):
 
    ALL_RES = []
    for f in tqdm(files): #tqdm gives you a progress bar
@@ -68,7 +68,7 @@ def do_dgs(resolution, maxscale, x, verbose, files, f):
 
    timestr = datetime.now().strftime("%Y-%m-%d-%H-%M")
 
-   pd.DataFrame(data=d, index = ['mean grain size', 'grain size sorting', 'grain size skewness', 'grain size kurtosis']).to_csv('demo_results/stats_batch_'+timestr+'.csv')
+   pd.DataFrame(data=d, index = ['mean grain size', 'grain size sorting', 'grain size skewness', 'grain size kurtosis']).to_csv(outdir+'/stats_batch_'+timestr+'.csv')
 
    # convert into percentiles (rows) versus images (columns)
    tmp = list(P.keys())
@@ -76,12 +76,12 @@ def do_dgs(resolution, maxscale, x, verbose, files, f):
    for k in range(1,len(tmp)):
        d.update( {tmp[k]: P[tmp[k]]['percentile_values'] } )
 
-   pd.DataFrame(data=d, index = P[tmp[0]]['percentiles']).to_csv('demo_results/percentiles_batch_'+timestr+'.csv')
+   pd.DataFrame(data=d, index = P[tmp[0]]['percentiles']).to_csv(outdir+'/percentiles_batch_'+timestr+'.csv')
 
    # write each to csv file
-   # pd.DataFrame.from_dict(S).to_csv('demo_results/stats_batch.csv')
-   # pd.DataFrame.from_dict(P).to_csv('demo_results/percentiles_batch.csv')
-   pd.DataFrame.from_dict(F).to_csv('demo_results/freqs_bins_batch_'+timestr+'.csv')
+   # pd.DataFrame.from_dict(S).to_csv(outdir+'/stats_batch.csv')
+   # pd.DataFrame.from_dict(P).to_csv(outdir+'/percentiles_batch.csv')
+   pd.DataFrame.from_dict(F).to_csv(outdir+'/freqs_bins_batch_'+timestr+'.csv')
 
    counter = 0
    cols = ['r','g','b','m','c','k','y'][:len(F)]
@@ -101,7 +101,7 @@ def do_dgs(resolution, maxscale, x, verbose, files, f):
    #plt.xlabel('Grain Size (pixels)')
    plt.ylabel('Frequency')
    #plt.show()
-   plt.savefig('demo_results/batch_psd_'+timestr+'.png', dpi=300, bbox_inches='tight')
+   plt.savefig(outdir+'/batch_psd_'+timestr+'.png', dpi=300, bbox_inches='tight')
    plt.close('all')
 
 #====================================
@@ -175,6 +175,7 @@ if __name__ == '__main__':
 
     Tk().withdraw() # we don't want a full GUI, so keep the root window from appearing
     files = askopenfilename(title='Select image files', multiple=True, filetypes=[("Pick files","*.*")])
+    outdir = askdirectory(title='Select output folder')
 
     # use verbose=1 for more output from dgs
     verbose=0
@@ -200,6 +201,6 @@ if __name__ == '__main__':
        f = np.asarray(f, int)
        print('Filter = '+str(f))
 
-    do_dgs(resolution, maxscale, x, verbose, files, f)
+    do_dgs(resolution, maxscale, x, verbose, files, f,outdir=outdir)
 
 ##
