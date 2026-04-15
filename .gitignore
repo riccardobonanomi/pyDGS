@@ -1,0 +1,5 @@
+# vscode settings
+.vscode/*
+
+#pycache folder
+__pycache__/*
