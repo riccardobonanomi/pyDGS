@@ -146,8 +146,8 @@ def dgs(image, resolution=1, maxscale=4, verbose=1, x=-0.5, f=0):
    # filter=False
 
    if f==1:
-      sigma_est = estimate_sigma(im, multichannel=False, average_sigmas=True)
-      region = denoise_wavelet(im, multichannel=False, rescale_sigma=True,
+      sigma_est = estimate_sigma(im, channel_axis=None, average_sigmas=True)
+      region = denoise_wavelet(im, channel_axis=None, rescale_sigma=True,
                                  method='VisuShrink', mode='soft', sigma=sigma_est*2)
    else:
       region = im.copy()
