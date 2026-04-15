@@ -152,8 +152,6 @@ if __name__ == '__main__':
             f = arg
             f = int(f)
 
-    print(f)
-
     if 'resolution' not in locals():
         resolution = 1
         print('Warning: no resolution in mm/px specified, using %i by default' % (resolution))
